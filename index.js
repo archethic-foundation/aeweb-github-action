@@ -211,14 +211,14 @@ const handler = async function () {
       throw 'User aborted website deployment.'
     }
   } catch (e) {
-    console.log(chalk.red(e))
+    console.log(e)
     exit(1)
   }
 }
 
 async function sendTransaction(transactions, index, endpoint) {
   return new Promise(async (resolve, reject) => {
-    console.log(chalk.blue('Transaction ' + (index + 1) + '...'))
+    console.log('Transaction ' + (index + 1) + '...')
     const tx = transactions[index]
 
     await archethic.waitConfirmations(
@@ -226,12 +226,12 @@ async function sendTransaction(transactions, index, endpoint) {
       endpoint,
       async nbConfirmations => {
         if (nbConfirmations == 1) {
-          console.log(chalk.blue('Got confirmation'))
+          console.log('Got confirmation')
           console.log(
-            chalk.cyanBright(
+
               'See transaction in explorer:',
               endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
-            )
+
           )
 
           if (index + 1 == transactions.length) {
@@ -245,7 +245,7 @@ async function sendTransaction(transactions, index, endpoint) {
     )
 
     await archethic.sendTransaction(tx, endpoint)
-    console.log(chalk.blue('Waiting transaction validation...'))
+    console.log('Waiting transaction validation...')
   })
 }
 
