@@ -7,12 +7,18 @@ inputs:
 
   endpoint:
     description: 'Endpoint of the network, default is https://testnet.archethic.net'
-    required: false
+    required: true
     default: 'https://testnet.archethic.net'
+
+  file-path:
+        description: 'Path of the folder/file/website, default ./'
+        required: true
+        default: './'
 
 outputs:
   transaction-address: # Url where the folder/file/website is hosted
     description: 'Url where the folder/file/website is hosted'
+
 runs:
   using: 'node16'
   main: 'index.js'
