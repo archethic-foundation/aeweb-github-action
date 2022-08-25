@@ -4,7 +4,11 @@ inputs:
   seed:  # Seed of the transaction chain
     description: 'Seed of the transaction chain'
     required: true
-    default: ''
+
+  endpoint:
+    description: 'Endpoint of the network, default is https://testnet.archethic.net'
+    required: false
+    default: 'https://testnet.archethic.net'
 
 outputs:
   transaction-address: # Url where the folder/file/website is hosted
