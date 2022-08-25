@@ -13,6 +13,7 @@ const MAX_FILE_SIZE = MAX_CONTENT_SIZE - 45_728
 
 
 const handler = async function () {
+
   try {
     // Derive address and get last transaction index
     const endpoint = core.getInput('endpoint');
