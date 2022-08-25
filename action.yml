@@ -10,7 +10,7 @@ inputs:
     required: true
     default: 'https://testnet.archethic.net'
 
-  file-path:
+  path:
         description: 'Path of the folder/file/website, default ./'
         required: true
         default: './'

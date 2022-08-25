@@ -17,7 +17,7 @@ const handler = async function () {
   try {
     // Derive address and get last transaction index
     const endpoint = core.getInput('endpoint');
-    let folderPath = path.normalize(core.getInput('file-path').endsWith(path.sep) ? core.getInput('file-path').slice(0, -1) : core.getInput('file-path'))
+    let folderPath = path.normalize(core.getInput('path').endsWith(path.sep) ? core.getInput('path').slice(0, -1) : core.getInput('path'))
 
     const baseSeed = core.getInput('seed');
     const baseIndex = await archethic.getTransactionIndex(archethic.deriveAddress(baseSeed, 0), endpoint)
