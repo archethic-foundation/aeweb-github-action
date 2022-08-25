@@ -224,17 +224,14 @@ async function sendTransaction(transactions, index, endpoint) {
     await archethic.waitConfirmations(
       tx.address,
       endpoint,
-      async nbConfirmations => {
-        if (nbConfirmations == 1) {
+      async function (nbConfirmations, maxConfirmations) {
+        if (nbConfirmations === 1) {
           console.log('Got confirmation')
           console.log(
-
               'See transaction in explorer:',
               endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
-
           )
-
-          if (index + 1 == transactions.length) {
+          if (index + 1 === transactions.length) {
             resolve()
           } else {
             await sendTransaction(transactions, index + 1, endpoint)
