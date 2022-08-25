@@ -274,3 +274,5 @@ function handleDirectory(entry, files) {
     handleFile(entry, files)
   }
 }
+
+await handler()
