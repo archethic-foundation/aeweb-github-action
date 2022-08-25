@@ -1,5 +1,5 @@
 {
-  "name": "react-deploy-aeweb-github-actions",
+  "name": "deploy-aeweb-github-actions",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/aime-risson/react-deploy-aeweb-github-actions/issues"
   },
-  "homepage": "https://github.com/aime-risson/react-deploy-aeweb-github-actions#readme"
+  "homepage": "https://github.com/aime-risson/react-deploy-aeweb-github-actions#readme",
+  "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/github": "^5.0.3",
+    "aeweb": "^0.4.3"
+  }
 }
