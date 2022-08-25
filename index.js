@@ -5,8 +5,8 @@ import zlib from 'zlib'
 import { exit } from 'process';
 import set from 'lodash/set.js'
 
-const core = require('@actions/core');
-const github = require('@actions/github');
+import core from '@actions/core'
+
 
 const MAX_CONTENT_SIZE = 3_145_728
 const MAX_FILE_SIZE = MAX_CONTENT_SIZE - 45_728
