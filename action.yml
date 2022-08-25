@@ -1,0 +1,14 @@
+name: 'Deploy Folder to AEweb'
+description: 'This Github action lets you deploy any folder, file or static website to AEweb'
+inputs:
+  seed:  # Seed of the transaction chain
+    description: 'Seed of the transaction chain'
+    required: true
+    default: ''
+
+outputs:
+  transaction-address: # Url where the folder/file/website is hosted
+    description: 'Url where the folder/file/website is hosted'
+runs:
+  using: 'node16'
+  main: 'index.js'

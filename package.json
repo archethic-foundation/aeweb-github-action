@@ -1,0 +1,20 @@
+{
+  "name": "react-deploy-aeweb-github-actions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aime-risson/react-deploy-aeweb-github-actions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aime-risson/react-deploy-aeweb-github-actions/issues"
+  },
+  "homepage": "https://github.com/aime-risson/react-deploy-aeweb-github-actions#readme"
+}
