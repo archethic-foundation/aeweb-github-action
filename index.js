@@ -226,7 +226,7 @@ async function sendTransaction(transactions, index, endpoint) {
       endpoint,
       async function (nbConfirmations, maxConfirmations) {
         if (nbConfirmations === 1) {
-          console.log('Got confirmation')
+          console.log('Got confirmation !')
           console.log(
               'See transaction in explorer:',
               endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
