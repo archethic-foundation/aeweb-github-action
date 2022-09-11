@@ -173,11 +173,11 @@ const handler = async function () {
 
     console.log(
       'Total Fee Requirement would be : ' +
-      fees.toFixed(2) +
+      (fees.toFixed(2) / 100_000_000 ) +
       ' UCO ( $ ' +
-      (rates.usd * fees).toFixed(2) +
+      (rates.usd * fees / 100_000_000).toFixed(2) +
       ' | € ' +
-      (rates.eur * fees).toFixed(2) +
+      (rates.eur * fees / 100_000_000 ).toFixed(2) +
       '), for ' + transactions.length + ' transactions.'
     )
 
