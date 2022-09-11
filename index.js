@@ -221,7 +221,7 @@ async function sendTransaction(transactions, index, endpoint) {
     console.log('Transaction ' + (index + 1) + '...')
     const tx = transactions[index]
     let sender = archethic.newTransactionSender()
-    sender.on('confirmation', async (nbConf, maxConf) => {
+    .on('confirmation', async (nbConf, maxConf) => {
       if (nbConf > 0) {
         console.log('Got confirmation !')
         console.log(
@@ -229,7 +229,8 @@ async function sendTransaction(transactions, index, endpoint) {
                 endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
         )
     }})
-    sender.send(tx, endpoint)
+    .on('error', (context, reason) => console.log(context, reason))
+    .send(tx, endpoint)
     if (index + 1 == transactions.length) {
       resolve()
     } else {
