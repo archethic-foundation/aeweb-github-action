@@ -21,6 +21,7 @@
   "dependencies": {
     "@actions/core": "^1.9.1",
     "@actions/github": "^5.0.3",
-    "archethic": "^1.12.0"
+    "archethic": "^1.12.0",
+    "lodash": "^4.17.21"
   }
 }
