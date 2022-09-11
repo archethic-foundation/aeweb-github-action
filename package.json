@@ -22,6 +22,6 @@
     "@actions/core": "^1.9.1",
     "@actions/github": "^5.0.3",
     "aeweb": "^0.4.3",
-    "archethic": "^1.11.0"
+    "archethic": "^1.12.0"
   }
 }

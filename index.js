@@ -217,21 +217,30 @@ const handler = async function () {
 }
 
 async function sendTransaction(transactions, index, endpoint) {
-  return new Promise(async (resolve, reject) => {
+  
     console.log('Transaction ' + (index + 1) + '...')
     const tx = transactions[index]
+    sender = archethic.newTransactionSender()
+    sender.on('confirmation', async (nbConf, maxConf) => {
+      if (nbConf == 1) {
+        console.log('Got confirmation !')
+        console.log(
+                'See transaction in explorer:',
+                endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
+        )
+        if (index + 1 == transactions.length) {
+          return
+        } else {
+          await sendTransaction(transactions, index + 1, endpoint)
+          return
+        }
 
-    await archethic.waitConfirmations(
-      tx.address,
-      endpoint, function (nbConfirmations, maxConfirmations) {
-        console.log(nbConfirmations)
-          console.log(maxConfirmations)
-      }
-    )
+    }})
+    
 
-    await archethic.sendTransaction(tx, endpoint)
+    sender.send(tx, endpoint)
     console.log('Waiting transaction validation...')
-  })
+  
 }
 
 
