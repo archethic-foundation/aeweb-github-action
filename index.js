@@ -1,6 +1,6 @@
 import fs from 'fs';
 import archethic from 'archethic';
-import path from 'path';
+import path, { resolve } from 'path';
 import zlib from 'zlib'
 import { exit } from 'process';
 import set from 'lodash/set.js'
@@ -222,21 +222,20 @@ async function sendTransaction(transactions, index, endpoint) {
     const tx = transactions[index]
     let sender = archethic.newTransactionSender()
     sender.on('confirmation', async (nbConf, maxConf) => {
-      if (nbConf == 1) {
+      if (nbConf > 0) {
         console.log('Got confirmation !')
         console.log(
                 'See transaction in explorer:',
                 endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
         )
-        if (index + 1 == transactions.length) {
-          return
-        } else {
-          await sendTransaction(transactions, index + 1, endpoint)
-          return
-        }
-
     }})
-    await sender.send(tx, endpoint)
+    sender.send(tx, endpoint)
+    if (index + 1 == transactions.length) {
+      resolve()
+    } else {
+      await sendTransaction(transactions, index + 1, endpoint)
+      resolve()
+    }
     console.log('Waiting transaction validation...')
   
 }
