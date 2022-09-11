@@ -221,7 +221,7 @@ async function sendTransaction(transactions, index, endpoint) {
     console.log('Transaction ' + (index + 1) + '...')
     const tx = transactions[index]
     sender = archethic.newTransactionSender()
-    sender.on('confirmation', async (nbConf, maxConf) => {
+    .on('confirmation', async (nbConf, maxConf) => {
       if (nbConf == 1) {
         console.log('Got confirmation !')
         console.log(
@@ -236,9 +236,7 @@ async function sendTransaction(transactions, index, endpoint) {
         }
 
     }})
-    
-
-    sender.send(tx, endpoint)
+    .send(tx, endpoint)
     console.log('Waiting transaction validation...')
   
 }
