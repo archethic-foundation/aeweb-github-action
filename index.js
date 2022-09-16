@@ -148,14 +148,14 @@ const handler = async function () {
     // Estimate refTx fees
     const slippage = 1.02
 
-    let { fee: fee, rates: rates } = await archethic.getTransactionFee(refTx, endpoint)
-    const refTxFees = +(fee * slippage).toFixed(8)
+    let { fee: fee , rates: rates } = await archethic.getTransactionFee(refTx, endpoint)
+    const refTxFees = +(fee / 100_000_000 * slippage).toFixed(8)
 
     let filesTxFees = 0
     // Estimate filesTx fees
     for (const tx of transactions) {
       ({ fee: fee } = await archethic.getTransactionFee(tx, endpoint))
-      filesTxFees += +(fee * slippage).toFixed(8)
+      filesTxFees += +(fee / 100_000_000 * slippage).toFixed(8)
     }
 
 
