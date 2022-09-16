@@ -201,10 +201,11 @@ const handler = async function () {
 
 
       console.log('Sending ' + transactions.length + ' transactions...')
-
-      await sendTransaction(transactions, 0, endpoint)
       const url = endpoint + '/api/web_hosting/' + firstRefAddress + '/'
       core.setOutput("transaction-address", url);
+      console.log(url);
+      await sendTransaction(transactions, 0, endpoint)
+
 
     } else {
       throw 'User aborted website deployment.'
@@ -223,11 +224,16 @@ async function sendTransaction(transactions, index, endpoint) {
               if (index  < transactions.length - 1) {
                 await sendTransaction(transactions, index + 1, endpoint)
               }
+              else {
+                console.log('All transactions sent')
+
+              }
 
    })
   sender.on('sent', () => console.log('Transaction ' + index + ' sent'))
   sender.on('error', (context, reason) => console.log('Transaction ' + index + ' error : ' + reason + "context : " + context))
   sender.send(transactions[index], endpoint)
+  return
   
 }
 
