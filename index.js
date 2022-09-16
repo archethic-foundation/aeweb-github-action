@@ -208,7 +208,7 @@ const handler = async function () {
       
 
       
-
+      exit(0)
 
     } else {
       throw 'User aborted website deployment.'
