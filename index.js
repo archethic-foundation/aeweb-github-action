@@ -228,15 +228,19 @@ async function sendTransaction(transactions, index, endpoint) {
                 'See transaction in explorer:',
                 endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
         )
-    }})
+        if (index + 1 == transactions.length) {
+          resolve()
+        } else {
+          sendTransaction(transactions, index + 1, endpoint)
+        }
+
+        }
+
+    })
     .on('error', (context, reason) => console.log(context, reason))
     .send(tx, endpoint)
-    if (index + 1 == transactions.length) {
-      resolve()
-    } else {
-      await sendTransaction(transactions, index + 1, endpoint)
-      resolve()
-    }
+    await sender;
+
     console.log('Waiting transaction validation...')
   
 }
