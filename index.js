@@ -223,6 +223,7 @@ async function sendTransaction(transactions, index, endpoint) {
 
    })
   sender.on('sent', () => console.log('Transaction ' + index + ' sent'))
+  sender.on('error', (context, reason) => console.log('Transaction ' + index + ' error : ' + reason + "context : " + context))
   sender.send(transactions[index], endpoint)
   
 }
