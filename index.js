@@ -190,23 +190,19 @@ const handler = async function () {
     // TODO: implement max fees
     const ok = true
     if (ok) {
+
+        // Send transactions
+
+
+
+
+
       console.log('Sending ' + transactions.length + ' transactions...')
 
       await sendTransaction(transactions, 0, endpoint)
-        .then(() => {
-          // Send reference tx
+      const url = endpoint + '/api/web_hosting/' + firstRefAddress + '/'
+      core.setOutput("transaction-address", url);
 
-          const url = endpoint + '/api/web_hosting/' + firstRefAddress + '/'
-          core.setOutput("transaction-address", url);
-          console.log(
-
-              (argStats.isDirectory() ? 'Website' : 'File') + ' is deployed at:',
-              endpoint + '/api/web_hosting/' + firstRefAddress + '/'
-
-          )
-
-          exit(0)
-        })
     } else {
       throw 'User aborted website deployment.'
     }
@@ -217,32 +213,17 @@ const handler = async function () {
 }
 
 async function sendTransaction(transactions, index, endpoint) {
-  
-    console.log('Transaction ' + (index + 1) + '...')
-    const tx = transactions[index]
-    let sender = archethic.newTransactionSender()
-    .on('confirmation', async (nbConf, maxConf) => {
-      console.log('Confirmation ' + nbConf + '/' + maxConf)
-      if (nbConf > 0) {
-        console.log('Got confirmation !')
-        console.log(
-                'See transaction in explorer:',
-                endpoint + '/explorer/transaction/' + Buffer.from(tx.address).toString('hex')
-        )
-        if (index + 1 == transactions.length) {
-          resolve()
-        } else {
-          await sendTransaction(transactions, index + 1, endpoint)
-        }
+  let sender = archethic.newTransactionSender()
+   sender.on('confirmation', async (nbConf, maxConf) => {
+              console.log('Transaction ' + i + ' confirmed once')
+              sender.unsubscribe()
+              if (index < transactions.length) {
+                await sendTransaction(transactions, index + 1, endpoint)
+              }
 
-        }
-
-    })
-    .on('error', (context, reason) => console.log(context, reason))
-    .send(tx, endpoint)
-    await sender;
-
-    console.log('Waiting transaction validation......')
+   })
+  sender.on('sent', () => console.log('Transaction ' + index + ' sent'))
+  sender.send(transactions[index], endpoint)
   
 }
 
