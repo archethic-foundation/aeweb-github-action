@@ -220,7 +220,7 @@ async function sendTransaction(transactions, index, endpoint) {
    sender.on('confirmation', async (nbConf, maxConf) => {
               console.log('Transaction ' + index + ' confirmed once')
               sender.unsubscribe()
-              if (index + 1 == transactions.length) {
+              if (index  < transactions.length - 1) {
                 await sendTransaction(transactions, index + 1, endpoint)
               }
 
