@@ -158,6 +158,7 @@ const handler = async function () {
       filesTxFees += +(fee * slippage).toFixed(8)
     }
 
+
     // Create transfer transactions
     const transferTx = archethic.newTransactionBuilder('transfer')
       .addUCOTransfer(firstRefAddress, refTxFees)
@@ -167,17 +168,19 @@ const handler = async function () {
 
     let fees = refTxFees + filesTxFees
     fees += (await archethic.getTransactionFee(transferTx, endpoint)).fee
-
+    console.log('Estimated fees: ' + fees + ' UCO')
+    console.log('Estimated fees: ' + fees / 100_000_000 + ' Uco')
+    fees = fees / 100_000_000
     transactions.unshift(transferTx)
     transactions.push(refTx)
 
     console.log(
       'Total Fee Requirement would be : ' +
-      (fees.toFixed(2) / 100_000_000 ) +
+      (fees.toFixed(2)  ) +
       ' UCO ( $ ' +
-      (rates.usd * fees / 100_000_000).toFixed(2) +
+      (rates.usd * fees ).toFixed(2) +
       ' | € ' +
-      (rates.eur * fees / 100_000_000 ).toFixed(2) +
+      (rates.eur * fees  ).toFixed(2) +
       '), for ' + transactions.length + ' transactions.'
     )
 
