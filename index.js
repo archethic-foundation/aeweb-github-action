@@ -196,15 +196,18 @@ const handler = async function () {
 
         // Send transactions
 
-
-
-
-
       console.log('Sending ' + transactions.length + ' transactions...')
-      const url = endpoint + '/api/web_hosting/' + firstRefAddress + '/'
-      core.setOutput("transaction-address", url);
-      console.log(url);
-      await sendTransaction(transactions, 0, endpoint)
+      await sendTransaction(transactions, 0, endpoint).then(() => {
+        const url = endpoint + '/api/web_hosting/' + firstRefAddress + '/'
+        core.setOutput("transaction-address", url);
+        console.log('url : ', url);
+      })
+      .catch((e) => {
+        console.log("error :" + e)
+      })
+      
+
+      
 
 
     } else {
@@ -217,23 +220,31 @@ const handler = async function () {
 }
 
 async function sendTransaction(transactions, index, endpoint) {
-  let sender = archethic.newTransactionSender()
-   sender.on('confirmation', async (nbConf, maxConf) => {
-              console.log('Transaction ' + index + ' confirmed once')
-              sender.unsubscribe()
-              if (index  < transactions.length - 1) {
-                await sendTransaction(transactions, index + 1, endpoint)
-              }
-              else {
-                console.log('All transactions sent')
+  return new Promise(async (resolve, reject) => {
+    let sender = archethic.newTransactionSender()
+     sender.on('confirmation', async (nbConf, maxConf) => {
+                console.log('Transaction ' + (index + 1) + ' confirmed once')
+                sender.unsubscribe()
+                if (index  < transactions.length - 1) {
+                  await sendTransaction(transactions, index + 1, endpoint)
+                  resolve();
+                }
+                else {
+                  console.log('All transactions sent')
+                  resolve();
+                }
 
-              }
+     })
 
-   })
-  sender.on('sent', () => console.log('Transaction ' + index + ' sent'))
-  sender.on('error', (context, reason) => console.log('Transaction ' + index + ' error : ' + reason + "context : " + context))
-  sender.send(transactions[index], endpoint)
-  return
+    sender.on('sent', () => console.log('Transaction ' + (index + 1) + ' sent'))
+    sender.on('error', (context, reason) => {
+      //console.log('Transaction ' + index + ' error : ' + reason + "context : " + context)
+      reject(reason)
+    })
+    sender.send(transactions[index], endpoint)
+  })
+
+  
   
 }
 
