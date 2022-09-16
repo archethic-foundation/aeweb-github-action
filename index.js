@@ -218,7 +218,7 @@ const handler = async function () {
 async function sendTransaction(transactions, index, endpoint) {
   let sender = archethic.newTransactionSender()
    sender.on('confirmation', async (nbConf, maxConf) => {
-              console.log('Transaction ' + i + ' confirmed once')
+              console.log('Transaction ' + index + ' confirmed once')
               sender.unsubscribe()
               if (index < transactions.length) {
                 await sendTransaction(transactions, index + 1, endpoint)
