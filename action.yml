@@ -20,5 +20,5 @@ outputs:
     description: 'Url where the folder/file/website is hosted'
 
 runs:
-  using: 'node16'
+  using: 'node18'
   main: 'index.js'
