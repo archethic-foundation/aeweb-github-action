@@ -1,6 +1,6 @@
 import { exit } from 'process';
 import core from '@actions/core'
-import { handler }  from "./index.js"
+import { handler }  from "./action.js"
 
 try {
   await handler(core.getInput("seed"), core.getInput("path"), core.getInput("endpoint"))
