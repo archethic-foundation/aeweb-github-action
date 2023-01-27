@@ -1,5 +1,5 @@
 name: 'Archethic Web'
-description: 'This Github action lets you deploy any folder, file or static website to AEweb'
+description: 'This Github action lets you deploy any folder, file or static website to the Archethic Blockchain'
 author: 'Archethic Foundation'
 
 branding:
