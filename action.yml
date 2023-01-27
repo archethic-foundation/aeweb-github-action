@@ -1,7 +1,10 @@
-name: 'Deploy Folder to AEweb'
+name: 'Archethic Web'
 description: 'This Github action lets you deploy any folder, file or static website to AEweb'
-icon: 'arrow-up-circle'
-color: 'black'
+author: 'Archethic Foundation'
+
+branding:
+  icon: 'arrow-up-circle'
+  color: 'black'
 
 inputs:
   seed:  # Seed of the transaction chain
