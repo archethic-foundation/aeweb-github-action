@@ -1,5 +1,8 @@
 name: 'Deploy Folder to AEweb'
 description: 'This Github action lets you deploy any folder, file or static website to AEweb'
+icon: 'arrow-up-circle'
+color: 'black'
+
 inputs:
   seed:  # Seed of the transaction chain
     description: 'Seed of the transaction chain'
