@@ -61,7 +61,7 @@ function getFilters(folderPath, filters) {
   }
 
   // Add the new filters to the previous filters
-  return newFilters.reduce((acc, path) => {
-    return acc.concat(glob.sync(path.join(folderPath, path)))
+  return newFilters.reduce((acc, filePath) => {
+    return acc.concat(glob.sync(path.join(folderPath, filePath)))
   }, filters)
 }
