@@ -2,7 +2,7 @@ import Archethic, { Crypto, Utils } from 'archethic';
 import AEWeb from 'aeweb';
 
 import { normalizeFolderPath, getFolderFiles } from './file.js'
-import { estimateTxsFees, getSeeds, sendTransactions } from './utils.js'
+import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './utils.js'
 
 const { deriveAddress } = Crypto
 const { originPrivateKey, fromBigInt, uint8ArrayToHex } = Utils
@@ -15,7 +15,6 @@ export async function handler(baseSeed, folderPath, endpoint) {
   const archethic = new Archethic(normalizedEndpoint)
   await archethic.connect()
 
-  const aeweb = new AEWeb(archethic)
 
   // Get seeds
   const { refSeed, filesSeed } = getSeeds(baseSeed)
@@ -30,22 +29,49 @@ export async function handler(baseSeed, folderPath, endpoint) {
   const refIndex = await archethic.transaction.getTransactionIndex(refAddress)
   let filesIndex = await archethic.transaction.getTransactionIndex(filesAddress)
 
+  let isWebsiteUpdate = false
+  let prevRefTxContent
+
+  // Check if website is already deployed
+  if ((refIndex) !== 0) {
+    isWebsiteUpdate = true;
+    const lastRefTx = await fetchLastRefTx(refAddress, archethic);
+    prevRefTxContent = JSON.parse(lastRefTx.data.content);
+  }
+
+  const aeweb = new AEWeb(archethic, prevRefTxContent)
+
   // Convert directory structure into array of file content
   console.log('Creating file structure and compress content...')
 
-  getFolderFiles(normalizedFolderPath).forEach(({ filePath, data}) => {
+  getFolderFiles(normalizedFolderPath).forEach(({ filePath, data }) => {
     aeweb.addFile(filePath, data)
   })
 
   console.log('Building files transactions...')
 
-  // Sign files transactions
-  const transactions = aeweb.getFilesTransactions().map((tx, i) => {
-    const index = filesIndex
-    filesIndex++
-    console.log(`Building file transaction (#${i+1})`)
-    return tx.build(filesSeed, index).originSign(originPrivateKey)
-  })
+  let transactions;
+
+  if (isWebsiteUpdate) {
+    let modifiedFiles = aeweb.listModifiedFiles();
+    let removedFiles = aeweb.listRemovedFiles();
+
+    // Stop the action if not update is present
+    if (!modifiedFiles.length && !removedFiles.length) {
+      return;
+    }
+  }
+
+  // when files changes does exist
+  if (!isWebsiteUpdate || (aeweb.listModifiedFiles().length)) {
+    // Sign files transactions
+    transactions = aeweb.getFilesTransactions().map((tx, i) => {
+      const index = filesIndex
+      filesIndex++
+      console.log(`Building file transaction (#${i + 1})`)
+      return tx.build(filesSeed, index).originSign(originPrivateKey)
+    })
+  }
 
   console.log('Building reference transaction...')
   const refTx = await aeweb.getRefTransaction(transactions)
@@ -53,7 +79,6 @@ export async function handler(baseSeed, folderPath, endpoint) {
   refTx.build(refSeed, refIndex).originSign(originPrivateKey)
 
   transactions.push(refTx)
-
 
   // Create transfer transaction to fund the chains
   console.log("Create funding transaction...")
