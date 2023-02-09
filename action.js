@@ -37,23 +37,26 @@ export async function handler(baseSeed, folderPath, endpoint) {
     aeweb.addFile(filePath, data)
   })
 
+  console.log('Building files transactions...')
+
   // Sign files transactions
-  const transactions = aeweb.getFilesTransactions().map(tx => {
+  const transactions = aeweb.getFilesTransactions().map((tx, i) => {
     const index = filesIndex
     filesIndex++
+    console.log(`Building file transaction (#${i+1})`)
     return tx.build(filesSeed, index).originSign(originPrivateKey)
   })
 
+  console.log('Building reference transaction...')
   const refTx = await aeweb.getRefTransaction(transactions)
   // Sign ref transaction
   refTx.build(refSeed, refIndex).originSign(originPrivateKey)
 
   transactions.push(refTx)
 
-  // Estimation of fees
-  const { refTxFees, filesTxFees } = await estimateTxsFees(archethic, transactions)
 
   // Create transfer transaction to fund the chains
+  console.log("Create funding transaction...")
   const transferTx = archethic.transaction.new()
     .setType('transfer')
     .addUCOTransfer(refAddress, refTxFees)
@@ -62,6 +65,9 @@ export async function handler(baseSeed, folderPath, endpoint) {
   transferTx.build(baseSeed, baseIndex).originSign(originPrivateKey)
   transactions.unshift(transferTx)
 
+  console.log('Estimate fees...')
+  // Estimation of fees
+  const { refTxFees, filesTxFees } = await estimateTxsFees(archethic, transactions)
   const { fee, rates } = await archethic.transaction.getTransactionFee(transferTx)
   const fees = fromBigInt(fee + refTxFees + filesTxFees)
 
