@@ -1,4 +1,5 @@
 import { Utils } from "archethic";
+import fetch from "node-fetch";
 
 const { uint8ArrayToHex } = Utils;
 

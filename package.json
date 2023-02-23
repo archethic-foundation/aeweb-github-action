@@ -22,6 +22,7 @@
     "archethic": "^1.14.0",
     "glob": "^8.1.0",
     "lodash": "^4.17.21",
+    "node-fetch": "^3.3.0",
     "parse-gitignore": "^2.0.0"
   }
 }
