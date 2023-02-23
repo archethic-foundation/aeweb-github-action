@@ -80,19 +80,24 @@ export async function handler(baseSeed, folderPath, endpoint) {
 
   transactions.push(refTx)
 
+  // Estimation of fees
+  console.log('Estimate fees...')
+  const { refTxFees, filesTxFees } = await estimateTxsFees(archethic, transactions)
+
   // Create transfer transaction to fund the chains
   console.log("Create funding transaction...")
   const transferTx = archethic.transaction.new()
     .setType('transfer')
     .addUCOTransfer(refAddress, refTxFees)
-    .addUCOTransfer(filesAddress, filesTxFees)
+
+  //handle no new files tx, but update to ref tx
+  if (filesTxFees) {
+    transferTx.addUCOTransfer(filesAddress, filesTxFees)
+  }
 
   transferTx.build(baseSeed, baseIndex).originSign(originPrivateKey)
   transactions.unshift(transferTx)
 
-  console.log('Estimate fees...')
-  // Estimation of fees
-  const { refTxFees, filesTxFees } = await estimateTxsFees(archethic, transactions)
   const { fee, rates } = await archethic.transaction.getTransactionFee(transferTx)
   const fees = fromBigInt(fee + refTxFees + filesTxFees)
 
