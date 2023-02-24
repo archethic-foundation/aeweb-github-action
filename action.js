@@ -7,7 +7,7 @@ import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './u
 const { deriveAddress } = Crypto
 const { originPrivateKey, fromBigInt, uint8ArrayToHex } = Utils
 
-export async function handler(baseSeed, folderPath, endpoint) {
+export async function handler(baseSeed, folderPath, endpoint, keychainFundingService, keychainWebsiteService) {
   const normalizedFolderPath = normalizeFolderPath(folderPath)
 
   // Initialize endpoint connection
@@ -15,14 +15,42 @@ export async function handler(baseSeed, folderPath, endpoint) {
   const archethic = new Archethic(normalizedEndpoint)
   await archethic.connect()
 
+  let keychain
 
-  // Get seeds
-  const { refSeed, filesSeed } = getSeeds(baseSeed)
+  if (keychainFundingService) {
+    let keychainSeed = baseSeed
+    if (bip39.validateMnemonic(argv.seed)) {
+      keychainSeed = bip39.mnemonicToEntropy(baseSeed)
+    }
 
-  // Get genesis addresses
-  const baseAddress = deriveAddress(baseSeed, 0)
-  const refAddress = deriveAddress(refSeed, 0)
-  const filesAddress = deriveAddress(filesSeed, 0)
+    keychain = await archethic.account.getKeychain(keychainSeed)
+    if (!keychain.services[keychainFundingService]) {
+      throw `The keychain doesn't include the ${keychainFundingService} service`
+    }
+
+    if (!keychain.services[keychainWebsiteService]) {
+      throw `The keychain doesn't include the ${keychainWebsiteService} service`
+    }
+  }
+
+  let baseAddress, refAddress, filesAddress
+  let refSeed, filesSeed
+
+  if (keychain) {
+    baseAddress = keychain.deriveAddress(keychainFundingService, 0)
+    refAddress = keychain.deriveAddress(keychainWebsiteService, 0)
+    //TODO: derive the files address
+  } else {
+    // Get seeds
+    const extendedSeeds = getSeeds(baseSeed)
+    refSeed = seeds.refSeed
+    filesSeed = seeds.filesSeed
+
+    // Get genesis addresses
+    baseAddress = deriveAddress(baseSeed, 0)
+    refAddress = deriveAddress(refSeed, 0)
+    filesAddress = deriveAddress(filesSeed, 0)
+  }
 
   // Get the chains size
   const baseIndex = await archethic.transaction.getTransactionIndex(baseAddress)
@@ -69,6 +97,10 @@ export async function handler(baseSeed, folderPath, endpoint) {
       const index = filesIndex
       filesIndex++
       console.log(`Building file transaction (#${i + 1})`)
+
+      if (keychain) {
+        // TODO: handle to signature with the keychain
+      }
       return tx.build(filesSeed, index).originSign(originPrivateKey)
     })
   }
@@ -76,7 +108,15 @@ export async function handler(baseSeed, folderPath, endpoint) {
   console.log('Building reference transaction...')
   const refTx = await aeweb.getRefTransaction(transactions)
   // Sign ref transaction
-  refTx.build(refSeed, refIndex).originSign(originPrivateKey)
+  if (keychain) {
+    keychain
+      .buildTransaction(refTx, keychainWebsiteService, refIndex)
+      .originSign(originPrivateKey)
+  } else {
+    refTx
+      .build(refSeed, refIndex)
+      .originSign(originPrivateKey)
+  }
 
   transactions.push(refTx)
 
@@ -95,7 +135,15 @@ export async function handler(baseSeed, folderPath, endpoint) {
     transferTx.addUCOTransfer(filesAddress, filesTxFees)
   }
 
-  transferTx.build(baseSeed, baseIndex).originSign(originPrivateKey)
+  if (keychain) {
+    keychain
+      .buildTransaction(transferTx, keychainFundingService, baseIndex)
+      .originSign(originPrivateKey)
+  } else {
+    transferTx
+      .build(baseSeed, baseIndex)
+      .originSign(originPrivateKey)
+  }
   transactions.unshift(transferTx)
 
   const { fee, rates } = await archethic.transaction.getTransactionFee(transferTx)
