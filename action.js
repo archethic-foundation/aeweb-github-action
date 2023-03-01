@@ -1,5 +1,6 @@
 import Archethic, { Crypto, Utils } from 'archethic';
 import AEWeb from 'aeweb';
+import bip39 from "bip39";
 
 import { normalizeFolderPath, getFolderFiles } from './file.js'
 import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './utils.js'
@@ -19,7 +20,7 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
 
   if (keychainFundingService) {
     let keychainSeed = baseSeed
-    if (bip39.validateMnemonic(argv.seed)) {
+    if (bip39.validateMnemonic(baseSeed)) {
       keychainSeed = bip39.mnemonicToEntropy(baseSeed)
     }
 
@@ -39,7 +40,7 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
   if (keychain) {
     baseAddress = keychain.deriveAddress(keychainFundingService, 0)
     refAddress = keychain.deriveAddress(keychainWebsiteService, 0)
-    //TODO: derive the files address
+    filesAddress = keychain.deriveAddress(keychainWebsiteService, 0, "files")
   } else {
     // Get seeds
     const extendedSeeds = getSeeds(baseSeed)
@@ -99,7 +100,9 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
       console.log(`Building file transaction (#${i + 1})`)
 
       if (keychain) {
-        // TODO: handle to signature with the keychain
+        return keychain
+          .buildTransaction(tx, keychainWebsiteService, index, "files")
+          .originSign(originPrivateKey)
       }
       return tx.build(filesSeed, index).originSign(originPrivateKey)
     })
