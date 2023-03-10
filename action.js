@@ -27,6 +27,7 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
     }
 
     console.log("Fetching keychain...")
+
     keychain = await archethic.account.getKeychain(keychainSeed)
     if (!keychain.services[keychainFundingService]) {
       throw `The keychain doesn't include the ${keychainFundingService} service`
@@ -82,7 +83,6 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
   getFolderFiles(normalizedFolderPath).forEach(({ filePath, data }) => {
     aeweb.addFile(filePath, data)
   })
-
 
   let transactions;
 
