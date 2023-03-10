@@ -19,7 +19,7 @@
     "@actions/core": "^1.9.1",
     "@actions/github": "^5.0.3",
     "aeweb": "^0.7.0",
-    "archethic": "../libjs",
+    "archethic": "github:archethic-foundation/libjs#master",
     "bip39": "^3.1.0",
     "glob": "^8.1.0",
     "lodash": "^4.17.21",

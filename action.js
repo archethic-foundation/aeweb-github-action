@@ -11,6 +11,8 @@ const { originPrivateKey, fromBigInt, uint8ArrayToHex } = Utils
 export async function handler(baseSeed, folderPath, endpoint, keychainFundingService, keychainWebsiteService) {
   const normalizedFolderPath = normalizeFolderPath(folderPath)
 
+  console.log("Connecting to Archethic endpoint...")
+
   // Initialize endpoint connection
   const normalizedEndpoint = new URL(endpoint).origin;
   const archethic = new Archethic(normalizedEndpoint)
@@ -24,6 +26,7 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
       keychainSeed = bip39.mnemonicToEntropy(baseSeed)
     }
 
+    console.log("Fetching keychain...")
     keychain = await archethic.account.getKeychain(keychainSeed)
     if (!keychain.services[keychainFundingService]) {
       throw `The keychain doesn't include the ${keychainFundingService} service`
@@ -32,6 +35,8 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
     if (!keychain.services[keychainWebsiteService]) {
       throw `The keychain doesn't include the ${keychainWebsiteService} service`
     }
+
+    console.log("Keychain loaded with the funding/website services")
   }
 
   let baseAddress, refAddress, filesAddress
@@ -44,8 +49,8 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
   } else {
     // Get seeds
     const extendedSeeds = getSeeds(baseSeed)
-    refSeed = seeds.refSeed
-    filesSeed = seeds.filesSeed
+    refSeed = extendedSeeds.refSeed
+    filesSeed = extendedSeeds.filesSeed
 
     // Get genesis addresses
     baseAddress = deriveAddress(baseSeed, 0)
@@ -63,6 +68,7 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
 
   // Check if website is already deployed
   if ((refIndex) !== 0) {
+    console.log("Check last update...")
     isWebsiteUpdate = true;
     const lastRefTx = await fetchLastRefTx(refAddress, archethic);
     prevRefTxContent = JSON.parse(lastRefTx.data.content);
@@ -71,13 +77,12 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
   const aeweb = new AEWeb(archethic, prevRefTxContent)
 
   // Convert directory structure into array of file content
-  console.log('Creating file structure and compress content...')
+  console.log('Analyzing website folder...')
 
   getFolderFiles(normalizedFolderPath).forEach(({ filePath, data }) => {
     aeweb.addFile(filePath, data)
   })
 
-  console.log('Building files transactions...')
 
   let transactions;
 
@@ -87,9 +92,12 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
 
     // Stop the action if not update is present
     if (!modifiedFiles.length && !removedFiles.length) {
+      console.log("There is not changes in the website folder for a new deployment.")
       return;
     }
   }
+
+  console.log('Building files transactions...')
 
   // when files changes does exist
   if (!isWebsiteUpdate || (aeweb.listModifiedFiles().length)) {
