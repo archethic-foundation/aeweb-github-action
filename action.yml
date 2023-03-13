@@ -20,11 +20,23 @@ inputs:
         description: 'Path of the folder/file/website, default ./'
         required: true
         default: './'
+        
+  keychainFundingService:
+        description: "Keychain's service to funds the website transactions"
+        
+  keychainWebsiteService:
+        description: "Keychain's service for the deployed website"
 
 outputs:
   transaction-address: # Url where the folder/file/website is hosted
     description: 'Url where the folder/file/website is hosted'
 
 runs:
-  using: 'node16'
-  main: 'index.js'
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+      - ${{ inputs.seed }}
+      - ${{ inputs.endpoint }}
+      - ${{ inputs.path }}
+      - ${{ inputs.keychainFundingService }}
+      - ${{ inputs.keychainWebsiteService }}
