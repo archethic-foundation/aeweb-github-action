@@ -57,7 +57,7 @@ jobs:
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
           path: "./web_site_test" #Path to the folder you want to deploy
           keychainFundingService: "archethic-wallet-TEST_AEWEB" # Service to fund the website's chain
-          keychainWebsiteService: "archethic-wallet-WEBSITE1" # Service to identify the website's chain
+          keychainWebsiteService: "aeweb-website1" # Service to identify the website's chain
 ```
 
 If you want to use the wallet, you have to provide your passphrase composed of 24 words i the Github's secret: *ARCH_BASE_SEED*
@@ -67,6 +67,12 @@ If you want to use the wallet, you have to provide your passphrase composed of 2
 Be careful, the action does not yet support max fees limitation. 
 More your website will be big and how many updates you will do, more you will need to fund the website's chain. 
 
-## That's all !
+## Development
 
-You can now push your project to GitHub and it will be automatically deployed to Archethic Blockchain !
+To test the development of the Github actions, you can use docker container.
+
+```sh
+docker build -t aeweb_actions .
+docker run -e INPUT_SEED=XXX -e INPUT_ENDPOINT=https://testnet.archethic.net -e INPUT_PATH=XXX aeweb_actions
+```
+

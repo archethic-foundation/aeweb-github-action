@@ -1,0 +1,30 @@
+{
+    "name": "deploy-aeweb-github-actions",
+    "type": "module",
+    "version": "1.7.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/archethic-foundation/aeweb-github-action.git"
+    },
+    "keywords": [],
+    "author": "Archethic Foundation",
+    "license": "AGPL3",
+    "bugs": {
+        "url": "https://github.com/archethic-foundation/aeweb-github-action/issues"
+    },
+    "homepage": "https://github.com/archethic-foundation/aeweb-github-action#readme",
+    "dependencies": {
+        "aeweb": "^0.7.0",
+        "archethic": "github:archethic-foundation/libjs#master",
+        "bip39": "^3.1.0",
+        "glob": "^8.1.0",
+        "lodash": "^4.17.21",
+        "node-fetch": "^3.3.0",
+        "parse-gitignore": "^2.0.0"
+    }
+}
