@@ -21,7 +21,7 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.7.0
+        uses: archethic-foundation/aeweb-github-action@v1.7.1
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
@@ -51,7 +51,7 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.7.0
+        uses: archethic-foundation/aeweb-github-action@v1.7.1
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
