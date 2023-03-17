@@ -17,15 +17,21 @@ inputs:
     default: 'https://testnet.archethic.net'
 
   path:
-        description: 'Path of the folder/file/website, default ./'
-        required: true
-        default: './'
+    description: 'Path of the folder/file/website, default ./'
+    required: true
+    default: './'
         
   keychainFundingService:
-        description: "Keychain's service to funds the website transactions"
-        
+    description: "Keychain's service to funds the website transactions"
+
   keychainWebsiteService:
-        description: "Keychain's service for the deployed website"
+    description: "Keychain's service for the deployed website"
+
+  sslCertificateFile:
+    description: "File for the website's SSL certificate"
+
+  sslKey:
+    description: "Website's SSL key"
 
 outputs:
   transaction-address: # Url where the folder/file/website is hosted
@@ -40,3 +46,5 @@ runs:
       - ${{ inputs.path }}
       - ${{ inputs.keychainFundingService }}
       - ${{ inputs.keychainWebsiteService }}
+      - ${{ inputs.sslKey }}
+      - ${{ inputs.sslCertificateFile }}

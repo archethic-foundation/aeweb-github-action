@@ -1,6 +1,8 @@
 import Archethic, { Crypto, Utils } from 'archethic';
 import AEWeb from 'aeweb';
 import bip39 from "bip39";
+import tls from 'tls';
+import { X509Certificate } from 'crypto'
 
 import { normalizeFolderPath, getFolderFiles } from './file.js'
 import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './utils.js'
@@ -8,7 +10,17 @@ import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './u
 const { deriveAddress } = Crypto
 const { originPrivateKey, fromBigInt, uint8ArrayToHex } = Utils
 
-export async function handler(baseSeed, folderPath, endpoint, keychainFundingService, keychainWebsiteService) {
+export async function handler(baseSeed, folderPath, endpoint, keychainFundingService, keychainWebsiteService, sslKey, sslCertificate) {
+  if (sslKey && sslCertificate) {
+    console.log("Validation of the SSL certificate & key...")
+    if (validCertificate(sslCertificate, sslKey)) {
+      console.log("SSL certificate & key are valid")
+    }
+    else {
+      throw "SSL key or certificate are invalid"
+    }
+  }
+
   const normalizedFolderPath = normalizeFolderPath(folderPath)
 
   console.log("Connecting to Archethic endpoint...")
@@ -77,6 +89,9 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
   }
 
   const aeweb = new AEWeb(archethic, prevRefTxContent)
+  if (sslKey && sslCertificate) {
+    aeweb.addSSLCertificate(sslCertificate, sslKey)
+  }
 
   // Convert directory structure into array of file content
   console.log('Analyzing website folder...')
@@ -165,4 +180,19 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
 
   await sendTransactions(transactions, 0, normalizedEndpoint)
   console.log(`Website is deployed at: ${normalizedEndpoint}/api/web_hosting/${uint8ArrayToHex(refAddress)}/`)
+}
+
+function validCertificate(cert, key) {
+  try {
+    tls.createSecureContext({ cert, key })
+    const { validTo } = new X509Certificate(cert);
+    return new Date(validTo) > new Date()
+  }
+  catch (error) {
+    if (error.code === 'ERR_OSSL_X509_KEY_VALUES_MISMATCH') {
+      return false;
+    }
+    throw error;
+  }
+
 }

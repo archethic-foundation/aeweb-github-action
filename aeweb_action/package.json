@@ -1,7 +1,7 @@
 {
     "name": "deploy-aeweb-github-actions",
     "type": "module",
-    "version": "1.7.1",
+    "version": "1.8.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -19,8 +19,8 @@
     },
     "homepage": "https://github.com/archethic-foundation/aeweb-github-action#readme",
     "dependencies": {
-        "aeweb": "^0.7.0",
-        "archethic": "github:archethic-foundation/libjs#master",
+        "aeweb": "^0.7.2",
+        "archethic": "^1.16.0",
         "bip39": "^3.1.0",
         "glob": "^8.1.0",
         "lodash": "^4.17.21",

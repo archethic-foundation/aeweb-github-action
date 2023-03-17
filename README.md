@@ -62,6 +62,40 @@ jobs:
 
 If you want to use the wallet, you have to provide your passphrase composed of 24 words i the Github's secret: *ARCH_BASE_SEED*
 
+## SSL integration
+
+if you wish to deploy your website to HTTPS, we have to include a SSL certificate and SSL private key in the Github Actions secrets and 
+AEWeb will deploy the website securely on the Archethic Blockchain.
+
+```yaml
+on: [push]
+
+jobs:
+  deploy_to_aeweb:
+    runs-on: ubuntu-latest
+    name: A job to deploy file to AEweb
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy to AEweb
+        id: deploy
+        uses: archethic-foundation/aeweb-github-action@v1.7.1
+        with:
+          seed: ${{ secrets.ARCH_BASE_SEED }}
+          endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
+          path: "./web_site_test" #Path to the folder you want to deploy
+          sslCertificateFile: "cert.pem" # Filepath for the certificate file
+          sslKey: ${{ secrets.SSL_KEY }}
+
+
+```
+
+In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter *SSL_KEY* as credentials for your HTTPS website.
+
+**The SSL key should never be hardcoded in your code.**
+
+
 ## Notes
 
 Be careful, the action does not yet support max fees limitation. 
