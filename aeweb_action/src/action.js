@@ -1,5 +1,5 @@
-import Archethic, { Crypto, Utils } from 'archethic';
-import AEWeb from 'aeweb';
+import Archethic, { Crypto, Utils } from '@archethicjs/sdk';
+import AEWeb from '@archethicjs/aeweb-cli';
 import bip39 from "bip39";
 import tls from 'tls';
 import { X509Certificate } from 'crypto'
