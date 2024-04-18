@@ -57,7 +57,7 @@ export async function sendTransactions(transactions, index, endpoint) {
       .on("error", (context, reason) => reject(reason))
       .on("timeout", (nbConf) => reject("Transaction fell in timeout"))
       .on("sent", () => console.log("Waiting transaction validation..."))
-      .send(75);
+      .send(50);
   });
 }
 
