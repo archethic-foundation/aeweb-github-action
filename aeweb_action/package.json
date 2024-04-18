@@ -1,7 +1,7 @@
 {
     "name": "deploy-aeweb-github-actions",
     "type": "module",
-    "version": "1.8.0",
+    "version": "1.8.3",
     "description": "",
     "main": "index.js",
     "scripts": {
