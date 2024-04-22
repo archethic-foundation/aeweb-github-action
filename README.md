@@ -21,11 +21,13 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.8.3
+        uses: archethic-foundation/aeweb-github-action@v1.8.5
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
           path: "./web_site_test" #Path to the folder you want to deploy
+          sendTransactionTimeout: 60000
+          percentageOfConfirmations: 50
 ```
 
 In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter _ARCH_BASE_SEED_ as the seed to your transaction chain.
@@ -51,7 +53,7 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.8.0
+        uses: archethic-foundation/aeweb-github-action@v1.8.5
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
@@ -80,7 +82,7 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.8.0
+        uses: archethic-foundation/aeweb-github-action@v1.8.5
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
@@ -97,9 +99,6 @@ In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter _S
 
 Be careful, the action does not yet support max fees limitation.
 More your website will be big and how many updates you will do, more you will need to fund the website's chain.
-
-SEND_TRANSACTION_TIMEOUT (default=60000) is used to tweak the timeout.
-PERCENTAGE_OF_CONFIRMATIONS (default=50) is used to tweak the percent of successful confirmations to set a transaction as successful.
 
 ## Development
 
