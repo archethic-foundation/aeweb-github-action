@@ -28,7 +28,7 @@ jobs:
           path: "./web_site_test" #Path to the folder you want to deploy
 ```
 
-In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter *ARCH_BASE_SEED* as the seed to your transaction chain.
+In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter _ARCH_BASE_SEED_ as the seed to your transaction chain.
 
 **The seed should never be hardcoded in your code.**
 
@@ -60,11 +60,11 @@ jobs:
           keychainWebsiteService: "aeweb-website1" # Service to identify the website's chain
 ```
 
-If you want to use the wallet, you have to provide your passphrase composed of 24 words i the Github's secret: *ARCH_BASE_SEED*
+If you want to use the wallet, you have to provide your passphrase composed of 24 words i the Github's secret: _ARCH_BASE_SEED_
 
 ## SSL integration
 
-if you wish to deploy your website to HTTPS, we have to include a SSL certificate and SSL private key in the Github Actions secrets and 
+if you wish to deploy your website to HTTPS, we have to include a SSL certificate and SSL private key in the Github Actions secrets and
 AEWeb will deploy the website securely on the Archethic Blockchain.
 
 ```yaml
@@ -87,26 +87,26 @@ jobs:
           path: "./web_site_test" #Path to the folder you want to deploy
           sslCertificateFile: "cert.pem" # Filepath for the certificate file
           sslKey: ${{ secrets.SSL_KEY }}
-
-
 ```
 
-In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter *SSL_KEY* as credentials for your HTTPS website.
+In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter _SSL_KEY_ as credentials for your HTTPS website.
 
 **The SSL key should never be hardcoded in your code.**
 
-
 ## Notes
 
-Be careful, the action does not yet support max fees limitation. 
-More your website will be big and how many updates you will do, more you will need to fund the website's chain. 
+Be careful, the action does not yet support max fees limitation.
+More your website will be big and how many updates you will do, more you will need to fund the website's chain.
+
+SEND_TRANSACTION_TIMEOUT (default=60000) is used to tweak the timeout.
+PERCENTAGE_OF_CONFIRMATIONS (default=50) is used to tweak the percent of successful confirmations to set a transaction as successful.
 
 ## Development
 
 To test the development of the Github actions, you can use docker container.
+INPUT_SEED is the seed used to publish the website
 
 ```sh
 docker build -t aeweb_actions .
-docker run -e INPUT_SEED=XXX -e INPUT_ENDPOINT=https://testnet.archethic.net -e INPUT_PATH=XXX aeweb_actions
+docker run -e INPUT_SEED=XXX -e INPUT_ENDPOINT=http://host.docker.internal:4000 -e INPUT_PATH=/tmp/mywebsite -v /tmp/mywebsite:/tmp/mywebsite  aeweb_actions
 ```
-
