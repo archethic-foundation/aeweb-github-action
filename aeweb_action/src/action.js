@@ -10,7 +10,7 @@ import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './u
 const { deriveAddress } = Crypto
 const { originPrivateKey, fromBigInt, uint8ArrayToHex } = Utils
 
-export async function handler(baseSeed, folderPath, endpoint, keychainFundingService, keychainWebsiteService, sslKey, sslCertificate) {
+export async function handler(baseSeed, folderPath, endpoint, keychainFundingService, keychainWebsiteService, sslKey, sslCertificate, sendTxTimeout, percentageOfConfirmations) {
   if (sslKey && sslCertificate) {
     console.log("Validation of the SSL certificate & key...")
     if (validCertificate(sslCertificate, sslKey)) {
@@ -178,7 +178,7 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
 
   console.log(`Total Fee Requirement would be: ${fees} UCO ($${(rates.usd * fees).toFixed(2)}) for ${transactions.length} transactions`)
 
-  await sendTransactions(transactions, 0, normalizedEndpoint)
+  await sendTransactions(transactions, 0, normalizedEndpoint, sendTxTimeout, percentageOfConfirmations)
   console.log(`Website is deployed at: ${normalizedEndpoint}/api/web_hosting/${uint8ArrayToHex(refAddress)}/`)
 }
 

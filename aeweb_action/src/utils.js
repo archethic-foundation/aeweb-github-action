@@ -32,7 +32,7 @@ export async function estimateTxsFees(archethic, transactions) {
   return { refTxFees, filesTxFees };
 }
 
-export async function sendTransactions(transactions, index, endpoint) {
+export async function sendTransactions(transactions, index, endpoint, timeout, percentageOfConfirmations) {
   return new Promise(async (resolve, reject) => {
     console.log(`Transaction ${index + 1} ...`);
     const tx = transactions[index];
@@ -57,7 +57,7 @@ export async function sendTransactions(transactions, index, endpoint) {
       .on("error", (context, reason) => reject(reason))
       .on("timeout", (nbConf) => reject("Transaction fell in timeout"))
       .on("sent", () => console.log("Waiting transaction validation..."))
-      .send(50);
+      .send(percentageOfConfirmations, timeout);
   });
 }
 
