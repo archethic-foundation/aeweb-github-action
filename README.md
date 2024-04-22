@@ -21,13 +21,13 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.8.5
+        uses: archethic-foundation/aeweb-github-action@v1.8.6
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
           path: "./web_site_test" #Path to the folder you want to deploy
-          sendTransactionTimeout: 60000
-          percentageOfConfirmations: 50
+          sendTransactionTimeout: 60 # seconds
+          percentageOfConfirmations: 50 # % to consider the transaction successful
 ```
 
 In your Repo, go to Settings -> Secrets and click on "New Secret". Then enter _ARCH_BASE_SEED_ as the seed to your transaction chain.
@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.8.5
+        uses: archethic-foundation/aeweb-github-action@v1.8.6
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
@@ -82,7 +82,7 @@ jobs:
 
       - name: Deploy to AEweb
         id: deploy
-        uses: archethic-foundation/aeweb-github-action@v1.8.5
+        uses: archethic-foundation/aeweb-github-action@v1.8.6
         with:
           seed: ${{ secrets.ARCH_BASE_SEED }}
           endpoint: "https://testnet.archethic.net" #Endpoint you want to deploy to
