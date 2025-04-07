@@ -8,7 +8,7 @@ import { normalizeFolderPath, getFolderFiles } from './file.js'
 import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './utils.js'
 
 const { deriveAddress } = Crypto
-const { originPrivateKey, fromBigInt, uint8ArrayToHex } = Utils
+const { formatBigInt, originPrivateKey, uint8ArrayToHex } = Utils
 
 export async function handler(baseSeed, folderPath, endpoint, keychainFundingService, keychainWebsiteService, sslKey, sslCertificate, sendTxTimeout, percentageOfConfirmations) {
   if (sslKey && sslCertificate) {
@@ -174,7 +174,7 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
   transactions.unshift(transferTx)
 
   const { fee, rates } = await archethic.transaction.getTransactionFee(transferTx)
-  const fees = fromBigInt(fee + refTxFees + filesTxFees)
+  const fees = new Number(formatBigInt(fee + refTxFees + filesTxFees))
 
   console.log(`Total Fee Requirement would be: ${fees} UCO ($${(rates.usd * fees).toFixed(2)}) for ${transactions.length} transactions`)
 
