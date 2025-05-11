@@ -7,6 +7,8 @@ import * as core from '@actions/core';
 import { normalizeFolderPath, getFolderFiles } from './file.js'
 import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './utils.js'
 
+import * as core from '@actions/core';
+
 const { deriveAddress } = Crypto
 const { formatBigInt, originPrivateKey, uint8ArrayToHex } = Utils
 
