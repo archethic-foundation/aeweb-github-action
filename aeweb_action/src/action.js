@@ -3,7 +3,7 @@ import AEWeb from '@archethicjs/aeweb-cli';
 import bip39 from "bip39";
 import tls from 'tls';
 import { X509Certificate } from 'crypto'
-
+import * as core from '@actions/core';
 import { normalizeFolderPath, getFolderFiles } from './file.js'
 import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './utils.js'
 
@@ -180,7 +180,10 @@ export async function handler(baseSeed, folderPath, endpoint, keychainFundingSer
 
   await sendTransactions(transactions, 0, normalizedEndpoint, sendTxTimeout, percentageOfConfirmations)
   console.log(`Website is deployed at: ${normalizedEndpoint}/api/web_hosting/${uint8ArrayToHex(refAddress)}/`)
-  console.log(`::set-output name=website_url::${normalizedEndpoint}/api/web_hosting/${uint8ArrayToHex(refAddress)}/`);
+ 
+
+const websiteURL = `${normalizedEndpoint}/api/web_hosting/${uint8ArrayToHex(refAddress)}/`;
+core.setOutput('website_url', websiteURL);
 }
 
 function validCertificate(cert, key) {
