@@ -3,7 +3,7 @@ import AEWeb from '@archethicjs/aeweb-cli';
 import bip39 from "bip39";
 import tls from 'tls';
 import { X509Certificate } from 'crypto'
-import * as core from '@actions/core';
+ 
 import { normalizeFolderPath, getFolderFiles } from './file.js'
 import { estimateTxsFees, getSeeds, sendTransactions, fetchLastRefTx } from './utils.js'
 
