@@ -42,6 +42,8 @@ inputs:
 outputs:
   transaction-address: # Url where the folder/file/website is hosted
     description: "Url where the folder/file/website is hosted"
+  website_url: # Url where the folder/file/website is hosted
+    description: "Url where the folder/file/website is hosted"
 
 runs:
   using: "docker"
